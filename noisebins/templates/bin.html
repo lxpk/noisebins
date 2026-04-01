@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ bin.title }}{% endblock %}
+{% block body %}
+<h1>{{ bin.title }}</h1>
+<p><code>{{ bin.noisecode }}</code> · status {{ bin.status }}</p>
+<p>{{ bin.description or "" }}</p>
+<pre>{{ bin.contents_text or "" }}</pre>
+{% if bin.photos and bin.photos|length > 0 %}
+<h2>Photos</h2>
+<ul>
+{% for ph in bin.photos %}
+  <li><a href="{{ ph.url }}">{{ ph.sort_order }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

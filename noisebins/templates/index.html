@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Noisebins · Home{% endblock %}
+{% block body %}
+<h1>Noisebins</h1>
+<p>Places (flat list). Assign bins via the API or future UI.</p>
+<ul>
+{% for p in places %}
+  <li><strong>{{ p.name }}</strong> — {{ p.description or "" }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

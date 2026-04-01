@@ -1,0 +1,9 @@
+{
+  "name": "Noisebins",
+  "short_name": "Noisebins",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#3d7e9e",
+  "icons": []
+}

@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: noisebins
+      POSTGRES_PASSWORD: noisebins
+      POSTGRES_DB: noisebins
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U noisebins -d noisebins"]
+      interval: 3s
+      timeout: 5s
+      retries: 10

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}New bin{% endblock %}
+{% block body %}
+<h1>Register a bin</h1>
+<p>Browser form submission is not authenticated yet—use <a href="/docs">OpenAPI</a> with a JWT.</p>
+<form method="post" action="/bins/new">
+  <label>Title <input name="title" required/></label>
+  <label>Place
+    <select name="noiseplace_id">
+      <option value="">—</option>
+      {% for p in places %}
+      <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Submit</button>
+</form>
+{% endblock %}

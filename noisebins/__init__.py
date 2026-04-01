@@ -1,0 +1,1 @@
+"""Noisebins application package."""
