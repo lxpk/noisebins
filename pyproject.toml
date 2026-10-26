@@ -56,3 +56,6 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["noisebins*"]
+
+[tool.setuptools.package-data]
+noisebins = ["templates/*.html", "static/*"]

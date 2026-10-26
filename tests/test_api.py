@@ -119,11 +119,10 @@ def test_unauth_mutating_returns_401(client):
 
 def test_suggest_vision_on(monkeypatch, client, auth):
     import noisebins.api.v1.bins as bins_routes
+    from noisebins.config import get_settings
 
-    class S:
-        vision_assist_enabled = True
-
-    monkeypatch.setattr(bins_routes, "get_settings", lambda: S())
+    vision_on = get_settings().model_copy(update={"vision_assist_enabled": True})
+    monkeypatch.setattr(bins_routes, "get_settings", lambda: vision_on)
     b = client.post("/api/v1/bins", json={"title": "V"}, headers=auth)
     code = b.json()["noisecode"]
     s = client.post(

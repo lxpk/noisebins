@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import date, datetime
 
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID
+from fastapi_users.db import SQLAlchemyBaseOAuthAccountTableUUID, SQLAlchemyBaseUserTableUUID
 from sqlalchemy import (
     Date,
     DateTime,
@@ -22,8 +22,15 @@ class Base(DeclarativeBase):
     pass
 
 
+class OAuthAccount(SQLAlchemyBaseOAuthAccountTableUUID, Base):
+    """Links a user to an identity at an SSO provider (e.g. Noiseport); ``account_id`` is the OIDC ``sub``."""
+
+    __table_args__ = (UniqueConstraint("oauth_name", "account_id", name="uq_oauth_account_provider_sub"),)
+
+
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+    display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    oauth_accounts: Mapped[list[OAuthAccount]] = relationship("OAuthAccount", lazy="joined")
 
 
 class Noiseplace(Base):
