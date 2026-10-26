@@ -54,6 +54,36 @@ NOISEPORT_SCOPES=openid profile email
 Endpoints are discovered from `${NOISEPORT_ISSUER}/.well-known/openid-configuration`.
 `NOISEPORT_AUTHORIZE_URL`, `NOISEPORT_TOKEN_URL` and `NOISEPORT_USERINFO_URL` override discovery.
 
+## Using the Noisebridge Keycloak (current production plan)
+
+Production login starts on the Noisebridge Keycloak ("Noisebridge SSO", the same realm donate-portal
+uses). Noiseport can replace it later by changing only the issuer and client credentials.
+
+A Noisebridge Keycloak admin creates the client in the realm:
+
+- **Client type:** OpenID Connect, **Client authentication: on** (confidential client), standard flow
+  only (direct access grants and implicit flow off).
+- **Client ID:** `noisebins` (any value works; it goes in `NOISEPORT_CLIENT_ID`).
+- **Valid redirect URIs:** `${PUBLIC_BASE_URL}/auth/noiseport/callback`, for example
+  `https://bins.noisebridge.net/auth/noiseport/callback`.
+- **Web origins:** `${PUBLIC_BASE_URL}`.
+- **Client scopes:** the default `profile` and `email` scopes, so `/userinfo` returns `email`,
+  `email_verified` and `name`.
+- Copy the client secret from the **Credentials** tab into `NOISEPORT_CLIENT_SECRET`.
+
+Then configure noisebins (the variables keep their `NOISEPORT_` prefix; only the label changes):
+
+```env
+NOISEPORT_OAUTH_ENABLED=true
+NOISEPORT_DISPLAY_NAME="Noisebridge SSO"   # header shows "Sign in with Noisebridge SSO"
+NOISEPORT_ISSUER=https://<sso-host>/realms/<realm>
+NOISEPORT_CLIENT_ID=noisebins
+NOISEPORT_CLIENT_SECRET=...
+```
+
+Because Keycloak reports `email_verified`, members whose email Keycloak has verified are merged into
+an existing email/password noisebins account with the same address on first sign-in.
+
 ## Registering noisebins in Noiseport
 
 Noiseport currently runs Spaceport's code unchanged, which needs three small changes before any new
@@ -144,5 +174,5 @@ pins that sha. For noisebins that means:
 - Provide Postgres and set `DATABASE_URL`, `SECRET_KEY`, `USERS_JWT_SECRET`, `PUBLIC_BASE_URL`
   (https), and the `NOISEPORT_*` values from a Secret.
 - Give `LOCAL_STORAGE_PATH` (default `/app/data/blobs`) a persistent volume until object storage lands.
-- Register the client in whichever provider is live (Noiseport or Keycloak) with the production
-  callback URL.
+- Register the client in whichever provider is live (Keycloak first, see above; Noiseport later)
+  with the production callback URL.
