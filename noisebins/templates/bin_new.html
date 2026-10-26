@@ -2,7 +2,9 @@
 {% block title %}New bin{% endblock %}
 {% block body %}
 <h1>Register a bin</h1>
-<p>Browser form submission is not authenticated yet—use <a href="/docs">OpenAPI</a> with a JWT.</p>
+{% if not user %}
+<p>Sign in to register a bin{% if sso_enabled %} — <a href="{{ login_path('/bins/new') }}">sign in with {{ sso_name }}</a>{% endif %}. API clients can use <a href="/docs">OpenAPI</a> with a JWT.</p>
+{% endif %}
 <form method="post" action="/bins/new">
   <label>Title <input name="title" required/></label>
   <label>Place

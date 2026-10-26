@@ -9,6 +9,14 @@
 <body>
 <header>
   <a href="/">Home</a> · <a href="/search">Search</a> · <a href="/bins/new">New bin</a> · <a href="/docs">API</a>
+  <span class="session">
+  {% if user %}
+    · Signed in as <strong data-testid="signed-in-as">{{ user.display_name or user.email }}</strong>
+    <form method="post" action="/auth/logout" style="display:inline"><button type="submit">Sign out</button></form>
+  {% elif sso_enabled %}
+    · <a href="{{ login_path(request.url.path) }}" data-testid="sso-login">Sign in with {{ sso_name }}</a>
+  {% endif %}
+  </span>
 </header>
 <main>
 {% block body %}{% endblock %}

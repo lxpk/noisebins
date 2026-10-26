@@ -136,7 +136,7 @@ Mirror Noisebin where useful:
 ## Auth integrations
 
 - **Shipped in this repo (MVP / phase 3):** **FastAPI Users** with email + password and **JWT** (`POST /auth/register`, `POST /auth/jwt/login`). Use `Authorization: Bearer <token>` for write APIs.
-- **Second provider (phase 14):** **Noiseport** OAuth stub at `GET /auth/noiseport/login` (returns 501 until `NOISEPORT_OAUTH_ENABLED` and URLs are configured). Gmail OAuth can follow the same pattern behind FastAPI Users.
+- **Noiseport single sign-on (OIDC):** set `NOISEPORT_OAUTH_ENABLED=true`, `NOISEPORT_ISSUER`, `NOISEPORT_CLIENT_ID` and `NOISEPORT_CLIENT_SECRET`. The header shows **Sign in with Noiseport**; someone already signed in to Noiseport is bounced straight back, signed in to noisebins with a session cookie that pages, the browser forms, and same-origin API calls all accept. Works the same against the Noisebridge Keycloak realm. Setup, local demo and deployment notes: [docs/noiseport-sso.md](./docs/noiseport-sso.md). Gmail OAuth can follow the same pattern behind FastAPI Users.
 
 ## Development
 

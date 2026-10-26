@@ -26,9 +26,14 @@ def _sync_url() -> str:
     return os.environ["DATABASE_URL"].replace("+psycopg_async", "+psycopg", 1)
 
 
+def _libpq_url() -> str:
+    """psycopg.connect wants a plain libpq URL, without SQLAlchemy's +driver suffix."""
+    return _sync_url().replace("+psycopg", "", 1)
+
+
 def pg_ready() -> bool:
     try:
-        with psycopg.connect(_sync_url(), connect_timeout=2) as c:
+        with psycopg.connect(_libpq_url(), connect_timeout=2) as c:
             c.execute("SELECT 1")
         return True
     except Exception:
@@ -48,7 +53,7 @@ def _alembic_upgrade():
 def _truncate():
     if not pg_ready():
         return
-    with psycopg.connect(_sync_url()) as c:
+    with psycopg.connect(_libpq_url()) as c:
         c.execute(
             'TRUNCATE audit_logs, content_history, noisethings, bin_photos, noisebins, noiseplaces, "user" CASCADE'
         )
